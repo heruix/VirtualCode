@@ -47,11 +47,11 @@ def vm_launch(cmdarr, envdict=None):
         
     vmpath = tmpRoot + '/' + os.path.basename(exepath) + '-vm'
     if not os.path.exists(vmpath):
-        shell('cp -p %s %s; %s --add-needed libhijackmain.so %s.' % (exepath, vmpath, elfPatcher, vmpath))
+        shell('cp -p %s %s; %s --add-needed libhijackmain.so %s' % (exepath, vmpath, elfPatcher, vmpath))
     dtlist = execmd([elfPatcher, '--print-needed', vmpath])
     if dtlist.find('hijackmain') < 0:
         shell('rm ' + vmpath)
-        print('Failed to make vm version executable file %s.' % (vmpath))
+        print('%sFailed to make vm version executable file %s.' % (dtlist, vmpath))
         return None
         
     if not envdict:
@@ -68,7 +68,7 @@ def main(args):
         # set default test program
         args = [
             args[0], 
-            binRoot + '/armeabi/lldb-server', 
+            elfPatcher, 
         ]
     exepath = args[1]
     if not os.path.exists(exepath):

@@ -22,7 +22,7 @@
 #include "../../include/UnicornVM.h"
 
 #define logger(...)                                                            \
-    __android_log_print(ANDROID_LOG_DEBUG, "Fridobot", __VA_ARGS__)
+    __android_log_print(ANDROID_LOG_INFO, "Fridobot", __VA_ARGS__)
 
 // simple implementation for module filter
 static bool plt_prehook(const char *module_name, const char *func_name) {
@@ -37,16 +37,20 @@ static vc_callback_return_t interp_callback_nop(vc_callback_args_t *args) {
 
 // hijack __libc_init in plt and replace main function to UnicornVM's implementation
 static void *hijack_libc_init_plt = NULL;
-static void hijack_libc_init(void *arg0, void *arg1, const void *fnmain) {
+static void *hijack_libc_init(void *arg0, void *arg1, const void *fnmain, void *arg3,
+    void *arg4, void *arg5, void *arg6, void *arg7) {
     const void *vmmain = vc_make_callee(fnmain, NULL, interp_callback_nop);
     logger(
         "Replace main function %p to UnicornVM's %p, running with arm interpreter...", 
         fnmain, vmmain);
-    ((void (*)(void *, void *, const void *))hijack_libc_init_plt)(arg0, arg1, vmmain);
+    return ((void *(*)(void *, void *, const void *, void *, void *, void *, void *, void *))
+        hijack_libc_init_plt)(arg0, arg1, vmmain, arg3, arg4, arg5, arg6, arg7);
 }
 
 // invoke plt hooker
 static void __attribute__((constructor)) __init__() {
+    logger("Running hijacked program.");
+
     elf_hooker hooker;
     hooker.set_prehook_cb(plt_prehook);
     hooker.phrase_proc_maps();

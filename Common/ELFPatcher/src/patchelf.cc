@@ -292,16 +292,20 @@ struct SysError : std::runtime_error
     SysError(const std::string & msg)
         : std::runtime_error(fmt(msg + ": " + strerror(errno)))
         , errNo(errno)
-    { }
+    { 
+        printf("ERROR: %s\n", msg.c_str());
+        exit(errNo);
+    }
 };
 
 
 __attribute__((noreturn)) static void error(std::string msg)
 {
+    printf("ERROR: %s\n", msg.c_str());
     if (errno)
-        abort(); // throw SysError(msg);
+        exit(errno); // throw SysError(msg);
     else
-        abort(); // throw std::runtime_error(msg);
+        exit(-2); // throw std::runtime_error(msg);
 }
 
 
@@ -318,10 +322,10 @@ static FileContents readFile(std::string fileName,
 {
     struct stat st;
     if (stat(fileName.c_str(), &st) != 0)
-        abort(); // throw SysError(fmt("getting info about '", fileName, "'"));
+        /*throw*/ SysError(fmt("getting info about '", fileName, "'"));
 
     if ((uint64_t) st.st_size > (uint64_t) std::numeric_limits<size_t>::max())
-        abort(); // throw SysError(fmt("cannot read file of size ", st.st_size, " into memory"));
+        /*throw*/ SysError(fmt("cannot read file of size ", st.st_size, " into memory"));
 
     size_t size = std::min(cutOff, (size_t) st.st_size);
 
@@ -330,7 +334,7 @@ static FileContents readFile(std::string fileName,
     contents->resize(size, 0);
 
     int fd = open(fileName.c_str(), O_RDONLY);
-    if (fd == -1) abort(); // throw SysError(fmt("opening '", fileName, "'"));
+    if (fd == -1) /*throw*/ SysError(fmt("opening '", fileName, "'"));
 
     size_t bytesRead = 0;
     ssize_t portion;
@@ -338,7 +342,7 @@ static FileContents readFile(std::string fileName,
         bytesRead += portion;
 
     if (bytesRead != size)
-        abort(); // throw SysError(fmt("reading '", fileName, "'"));
+        /*throw*/ SysError(fmt("reading '", fileName, "'"));
 
     close(fd);
 
