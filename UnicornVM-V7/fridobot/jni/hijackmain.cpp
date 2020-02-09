@@ -26,12 +26,22 @@
 
 // simple implementation for module filter
 static bool plt_prehook(const char *module_name, const char *func_name) {
+    size_t mnlen = strlen(module_name);
+    if (strncmp(module_name + mnlen - 3, ".so", 3) == 0) {
+        return false;
+    } 
+    
     logger("Hijacking %s plt %s.", module_name, func_name);
     return true;
 }
 
 // do nothing as we'll use recursive mode to interpret main function
 static vc_callback_return_t interp_callback_nop(vc_callback_args_t *args) {
+    static bool hitted = false;
+    if (!hitted) {
+        hitted = true;
+        logger("Running UnicormVM-V7 android arm interpreter ...");
+    }
     return cbret_continue;
 }
 
@@ -41,7 +51,7 @@ static void *hijack_libc_init(void *arg0, void *arg1, const void *fnmain, void *
     void *arg4, void *arg5, void *arg6, void *arg7) {
     const void *vmmain = vc_make_callee(fnmain, NULL, interp_callback_nop);
     logger(
-        "Replace main function %p to UnicornVM's %p, running with arm interpreter...", 
+        "Will replace main function %p to UnicornVM's %p.", 
         fnmain, vmmain);
     return ((void *(*)(void *, void *, const void *, void *, void *, void *, void *, void *))
         hijack_libc_init_plt)(arg0, arg1, vmmain, arg3, arg4, arg5, arg6, arg7);
