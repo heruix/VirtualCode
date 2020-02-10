@@ -45,7 +45,7 @@ def vm_launch(cmdarr, envdict=None):
         print('There is no %s.' % (exepath))
         return None
     
-    vmpath = tmpRoot + '/uvm-' + os.path.basename(exepath)
+    vmpath = tmpRoot + '/uvm_' + os.path.basename(exepath)
     if not os.path.exists(vmpath):
         shell('cp -p %s %s; %s --add-needed libhijackmain.so %s' % (exepath, vmpath, elfPatcher, vmpath))
         dtlist = execmd([elfPatcher, '--print-needed', vmpath])
@@ -74,7 +74,7 @@ def main(args):
     if not os.path.exists(exepath):
         print('%s do not exist.' % (exepath))
         return
-    vm_launch(args[1:len(args)])
+    vm_launch(args[1:len(args)]).wait()
     
 if __name__ == '__main__':
     main(sys.argv)
