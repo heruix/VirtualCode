@@ -8,6 +8,12 @@ include $(PREBUILT_STATIC_LIBRARY)
 
 
 include $(CLEAR_VARS)
+LOCAL_MODULE := whale
+LOCAL_SRC_FILES := ../../../Common/ASMHooker/obj/whale/libwhale.so
+include $(PREBUILT_SHARED_LIBRARY)
+
+
+include $(CLEAR_VARS)
 LOCAL_MODULE := unicornvm
 LOCAL_SRC_FILES := ../../solib/libunicornvm.so
 include $(PREBUILT_SHARED_LIBRARY)
@@ -19,11 +25,12 @@ LOCAL_MODULE := hijackmain
 LOCAL_SRC_FILES := hijackmain.cpp
 
 LOCAL_CFLAGS += -fvisibility=hidden
-LOCAL_CPPFLAGS += $(LOCAL_CFLAGS) -std=gnu++11
+LOCAL_CPPFLAGS += $(LOCAL_CFLAGS) -std=gnu++14
 LOCAL_CONLYFLAGS += -std=gnu99
 
 LOCAL_LDLIBS += -llog
-LOCAL_SHARED_LIBRARIES := unicornvm
-LOCAL_STATIC_LIBRARIES := plthooker
+LOCAL_SHARED_LIBRARIES += unicornvm
+LOCAL_STATIC_LIBRARIES += whale
+LOCAL_STATIC_LIBRARIES += plthooker
 
 include $(BUILD_SHARED_LIBRARY)
