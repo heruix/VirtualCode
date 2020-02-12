@@ -15,6 +15,10 @@
 //
 // Version history:
 //
+// 2020.02.12 {
+//         * vm callback should use another FILE handle to log
+// }
+//
 // 2020.02.06 {
 //         * initialize UnicornVM api test code
 // }
@@ -31,25 +35,26 @@
 
 // log runtime information
 static vc_callback_return_t interp_callback_log(vc_callback_args_t *args) {
+    FILE *logfp = (FILE *)args->usrctx;
     switch (args->op) {
     case vcop_read:
     case vcop_write: {
         break;
     }
     case vcop_call: {
-        printf("vcop call : func %p.\n", args->info.call.callee);
+        fprintf(logfp, "vcop call : func %p.\n", args->info.call.callee);
         break;
     }
     case vcop_return: {
-        printf("vcop return : hit address %p.\n", args->info.ret.hitaddr);
+        fprintf(logfp, "vcop return : hit address %p.\n", args->info.ret.hitaddr);
         break;
     }
     case vcop_svc: {
-        printf("vcop syscall : syscall number %d.\n", args->info.svc.sysno);
+        fprintf(logfp, "vcop syscall : syscall number %d.\n", args->info.svc.sysno);
         break;
     }
     default: {
-        printf("unknown vcop %d.\n", args->op);
+        fprintf(logfp, "unknown vcop %d.\n", args->op);
         break;
     }
     }
@@ -66,7 +71,7 @@ static int numbers[] = {2, 0, 2, 0, 2, 2, 0, 20, 20, 1, 199, 100000000};
 
 // interpretee
 static int print_message(const char *reason, const char **argv,
-                         fn_vc_callback_t cb) {
+                         FILE *logfp, fn_vc_callback_t cb) {
     std::vector<std::string> svec;
     std::set<std::string> sset;
     std::map<std::string, std::string> smap;
@@ -153,10 +158,11 @@ static int print_message(const char *reason, const char **argv,
 
 // run interpretee directly
 int vrun_print_message(const char *reason, const char **argv,
-                       fn_vc_callback_t cb) {
+                       FILE *logfp, fn_vc_callback_t cb) {
     vc_context_t ctx;
     memset(&ctx, 0, sizeof(ctx));
     ctx.callback = cb;
+    ctx.usrctx = logfp;
     ctx.regctx.r[0].p = reason;
     ctx.regctx.r[1].p = (void *)argv;
     return (int)(long)vc_run_interp((void *)print_message, &ctx);
@@ -164,50 +170,59 @@ int vrun_print_message(const char *reason, const char **argv,
 
 // run interpretee with a wrapper
 int wrapper_print_message(const char *reason, const char **argv,
-                          fn_vc_callback_t cb) {
-    const void *fnptr = vc_make_callee((void *)print_message, nullptr, cb);
+                          FILE *logfp, fn_vc_callback_t cb) {
+    const void *fnptr = vc_make_callee((void *)print_message, logfp, cb);
     return ((int (*)(const char *, const char **))fnptr)(reason, argv);
 }
 
 int main(int argc, const char *argv[]) {
-    printf("UnicornVM test program, pid is %d.\n", getpid());
+    const char *logpath = "/data/local/tmp/apitest.log";
+    FILE *logfp = fopen(logpath, "w");
+    printf("UnicornVM test program, pid is %d, log path is %s.\n", getpid(), logpath);
     struct {
         const char *reason;
-        int (*func)(const char *, const char **, fn_vc_callback_t);
+        int (*func)(const char *, const char **, FILE *, fn_vc_callback_t);
         fn_vc_callback_t interpcb;
+        FILE *logfp;
     } testor[] = {
         {
             "direct",
             print_message,
+            nullptr,
             nullptr,
         },
         {
             "vrun0",
             vrun_print_message,
             nullptr,
+            nullptr,
         },
         {
             "vrun1",
             vrun_print_message,
             interp_callback_nop,
+            nullptr,
         },
         {
             "wrapper0",
             wrapper_print_message,
             interp_callback_nop,
+            nullptr,
         },
         {
             "wrapper1",
             wrapper_print_message,
             interp_callback_log,
+            logfp,
         },
     };
     for (size_t i = 0; i < sizeof(testor) / sizeof(testor[0]); i++) {
         printf("////// index %d //////\n", i);
         fflush(stdout);
         printf("////// result %d //////\n\n",
-               testor[i].func(testor[i].reason, argv, testor[i].interpcb));
+               testor[i].func(testor[i].reason, argv, testor[i].logfp, testor[i].interpcb));
         fflush(stdout);
     }
+    fclose(logfp);
     return 0;
 }

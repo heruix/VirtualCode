@@ -33,4 +33,4 @@ def launch(cmdarr, envdict=None):
     return subprocess.Popen(cmdarr, env=envdict)
     
 if __name__ == '__main__':
-    launch([testBin])
+    launch([testBin]).wait()
