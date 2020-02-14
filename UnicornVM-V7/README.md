@@ -1,11 +1,11 @@
-Virtual CPU base on unicorn for Android armeabi-v7a.
+Virtual CPU based on unicorn for Android armeabi-v7a.
 
 #### Description
 
  * fridobot : test scripts;
- * include : C/C++ header for API;
- * sample : demo for API;
- * solib : UnicormVM's armeabi-v7a runtime;
+ * include : c/c++ header for UVM API;
+ * sample : demo for UVM API;
+ * solib : UnicornVM's andriod armeabi-v7a runtime;
 
 ```
 VCAPI long vc_run_interp(const void *fn, const vc_context_t *usrctx);
@@ -17,7 +17,8 @@ Run function 'fn' on our VCPU with 'usrctx', the return value is in r0 which is 
 VCAPI const void *vc_make_callee(const void *fn, void *usrctx, fn_vc_callback_t callback);
 
 Make a wrapper for function 'fn' with 'usrctx','callback', the return value is a new function pointer which will run under our VCPU;
-You can replace this pointer to target's function pointer like C++-Vtable/Script-Native-Bridge.
+
+You can replace this pointer to process's function pointer like C++-Vtable/Script-Native-Bridge.
 ```
 
 Follow us for update or bug report:

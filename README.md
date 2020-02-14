@@ -4,9 +4,9 @@ Virtual Code Framework for V-CPU/VMProtect/ARM-Translator.
 
  * PantaEngine : A new arm/arm64 execution engine for Panta Android Emulator;
  * UltimateVM : Virtual Machine Protect for iOS/Android native binary file;
- * UnicornVM-iOS : Virtual CPU base on unicorn for iOS arm64;
- * UnicornVM-V7 : Virtual CPU base on unicorn for Android armeabi-v7a;
- * UnicornVM-V8 : Virtual CPU base on unicorn for Android arm64-v8a;
+ * UnicornVM-iOS : Virtual CPU based on unicorn for iOS arm64;
+ * UnicornVM-V7 : Virtual CPU based on unicorn for Android armeabi-v7a;
+ * UnicornVM-V8 : Virtual CPU based on unicorn for Android arm64-v8a;
 
 
 Follow us for update or bug report:

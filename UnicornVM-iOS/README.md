@@ -1,4 +1,4 @@
-Virtual CPU base on unicorn for iOS arm64.
+Virtual CPU based on unicorn for iOS arm64.
 
 #### Description
 

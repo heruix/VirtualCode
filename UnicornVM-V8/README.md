@@ -1,4 +1,4 @@
-Virtual CPU base on unicorn for Android arm64-v8a.
+Virtual CPU based on unicorn for Android arm64-v8a.
 
 #### Description
 
