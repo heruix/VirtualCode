@@ -15,12 +15,12 @@
 //
 // Version history:
 //
-// 2020.12.15 {
+// 2019.12.15 {
 //         * initialize UnicornVM SDK
 // }
 
-#ifndef __VIRTUALCODE_H__
-#define __VIRTUALCODE_H__
+#ifndef __UNICORNVM_ARMV7__
+#define __UNICORNVM_ARMV7__
 
 #ifdef __cplusplus
 extern "C" {
@@ -121,11 +121,11 @@ typedef struct vc_context_t {
 //
 // run function 'fn' on our VCPU with 'ctx'
 // return value is r0
-VCAPI long vc_run_interp(const void *fn, const vc_context_t *usrctx);
+VCAPI long vc_run_interp(const void *fn, const vc_context_t *ctx);
 
 // this api is used to make target's function pointer under your control
 //
-// make a wrapper for function 'fn' with 'ctx','callback'
+// make a wrapper for function 'fn' with 'usrctx','callback'
 // return value is a new function pointer which will run under our VCPU
 // you can replace this pointer to target's function pointer
 // like C++-Vtable/Script-Native-Bridge
@@ -137,4 +137,4 @@ VCAPI const void *vc_make_callee(const void *fn, void *usrctx,
 }
 #endif
 
-#endif // end of __VIRTUALCODE_H__
+#endif // end of __UNICORNVM_ARMV7__
