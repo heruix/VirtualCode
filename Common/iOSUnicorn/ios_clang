@@ -1,0 +1,50 @@
+#!/usr/bin/python
+
+'''
+This file is used to patch Unicorn build compiler for iOS arm64 on macOS.
+
+How to use:
+1. export CC=/path/to/ios_clang on a shell;
+2. in the unicorn source root directory, run make command;
+3. after building, the libunicorn result file is now for iOS arm64 platform. 
+
+If you have any advises, We are happy to hear from you.
+
+
+Follow us:
+----------------------------------------------------------------------
+        Email                           971159199@qq.com
+        公众号                           刘柏江
+        头条                             刘柏江
+        百家号                           刘柏江VM
+        微博                             刘柏江VM
+        码云                             https://gitee.com/geekneo/
+----------------------------------------------------------------------
+'''
+
+import os
+import sys
+import subprocess
+
+def main(args):
+    newargs = [ '/usr/bin/clang' ]
+    # we'll patch all x86* related compiler args to arm64
+    for i in range(1, len(args)):
+        if 1 and (args[i] == 'x86_64' or args[i] == '-shared'):
+            if args[i] == '-shared':
+                newargs.append(args[i])
+                newargs.append('-arch')
+            newargs.append('arm64')
+            newargs.append('-target')
+            newargs.append('arm64-apple-ios9.0')
+            newargs.append('-isysroot')
+            newargs.append('/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk')
+        else:
+            newargs.append(args[i].replace('i386', 'aarch64'))
+    # print(newargs)
+    proc = subprocess.Popen(newargs)
+    proc.wait()
+    sys.exit(proc.returncode)
+
+if __name__ == '__main__':
+    main(sys.argv)
