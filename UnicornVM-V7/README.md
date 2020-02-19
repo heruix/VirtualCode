@@ -8,9 +8,9 @@ Virtual CPU based on unicorn for Android armeabi-v7a.
  * solib : UnicornVM's andriod armeabi-v7a runtime;
 
 ```
-VCAPI long vc_run_interp(const void *fn, const vc_context_t *usrctx);
+VCAPI long vc_run_interp(const void *fn, const vc_context_t *ctx);
 
-Run function 'fn' on our VCPU with 'usrctx', the return value is in r0 which is the fn's return value.
+Run function 'fn' on our VCPU with 'ctx', the return value is in r0 which is the fn's return value.
 ```
 
 ```

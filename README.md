@@ -23,6 +23,10 @@ Follow us for update or bug report:
 
 #### Version History
 
+2020.02.19-v1.0.0:
+
+ * UnicornVM-iOS发布初始预览版；
+
 2020.02.10-v1.0.0:
 
  * UnicornVM-V7发布初始预览版；
