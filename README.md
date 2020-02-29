@@ -23,7 +23,7 @@ Follow us for update or bug report:
 
 #### Version History
 
-2020.03.01-v1.0.0:
+2020.02.29-v1.0.0:
 
  * UnicornVM-ARMV8(Android)发布初始版本；
  * UnicornVM-iOS(ARM64)发布初始版本；
