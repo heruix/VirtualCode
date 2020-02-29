@@ -23,6 +23,11 @@ Follow us for update or bug report:
 
 #### Version History
 
+2020.03.01-v1.0.0:
+
+ * UnicornVM-ARMV8(Android)发布初始版本；
+ * UnicornVM-iOS(ARM64)发布初始版本；
+
 2020.02.21-v0.9.0:
 
  * UnicornVM-ARMV8(Android)发布初始预览版；
@@ -33,9 +38,12 @@ Follow us for update or bug report:
 
 2020.02.10-v1.0.0:
 
- * UnicornVM-ARMV7(Android)发布初始预览版；
+ * UnicornVM-ARMV7(Android)发布初始版本；
 
+2020.02.03-v0.9.0:
+
+ * UnicornVM-ARMV7(Android)发布初始预览版；
 
 #### Known Issue
 
- * UnicornVM-ARM64递归全量虚拟化模式有Bug，不稳定；
+None.
