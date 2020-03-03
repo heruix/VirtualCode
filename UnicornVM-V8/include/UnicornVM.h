@@ -15,6 +15,10 @@
 //
 // Version history:
 //
+// 2020.03.03 {
+//         * add vcop_ifetch for callback
+// }
+//
 // 2020.02.20 {
 //         * initialize UnicornVM SDK
 // }
@@ -68,6 +72,7 @@ typedef enum vc_optype_t {
   vcop_call,    // function call
   vcop_return,  // function return
   vcop_svc,     // arm64 syscall
+  vcop_ifetch,  // interpreter fetch instruction
 } vc_optype_t;
 
 // callback args
@@ -79,7 +84,7 @@ typedef struct vc_callback_args_t {
   // current opcode
   vc_optype_t op;
   union {
-    // for vcop_read/vcop_write
+    // for vcop_read/vcop_write/vcop_ifetch
     struct {
       const void *src;
       void *dst;
